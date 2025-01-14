@@ -16,6 +16,7 @@ async function main() {
         console.error("MongoDB 연결 또는 작업 중 오류 발생:", err);
     } 
 }
+
 main();
 
 
