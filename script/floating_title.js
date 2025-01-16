@@ -6,7 +6,7 @@ async function floating_content() {
         if (!response.ok) {
             throw new Error('데이터 요청 실패');
         }
-
+        console.log('heeeeee');
         // JSON 데이터를 파싱
         const posts = await response.json();
         console.log('받은 데이터:', posts);
@@ -28,14 +28,16 @@ function renderPosts(posts) {
         postElement.style.border = '1px solid'
         postElement.className = 'post';
         postElement.innerHTML = 
-            `<p onclick="openpage()">${post.title}</p>`
+        `<p onclick="openpage()">${post._id}</p>
+        <p>${post.title}</p>`
         container.appendChild(postElement);
     });
 
 }
 
-async function openpage(){
+async function openpage(id){
     try {
+        console.log(id);
         const response = await fetch('/note/post');
         if (!response.ok) {
             throw new Error('오류');

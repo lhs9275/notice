@@ -21,7 +21,8 @@ main();
 
 
 let db = client.db('Notice').collection('login'); //로그인 관련 
-let db_2 = client.db('Notice').collection('post'); //게시판 관련
+let db_2 = client.db('Notice').collection('post');//게시판 관련
+let db_3 = client.db('Notice').collection('count'); 
 
 //  node.js 부분 
 const passport = require('passport');
@@ -83,8 +84,9 @@ app.get('/write', (req,res) =>{
 
 app.get('/posting',async(req,res)=>{
     try{
-        const posts = await db_2.find({}).sort({ createdAt: -1 }).toArray();  //db_2.find({}): MongoDB에서 모든 글 데이터를 가져옵니다.
-        res.status(200).json(posts);                                          //sort({ createdAt: -1 }):   글을 최신순으로 정렬합니다.
+        const posts = await db_2.find({}).sort({ createdAt: -1 }).toArray();
+        console.log("여기까지 ok")                                                                               //db_2.find({}): MongoDB에서 모든 글 데이터를 가져옵니다.
+        res.status(200).json(posts);                                                                            //sort({ createdAt: -1 }):   글을 최신순으로 정렬합니다.
     } catch (error) {
         console.error("글 불러오기 실패:", error);
         res.status(500).json({ message: '서버 오류가 발생했습니다.' });
@@ -92,9 +94,9 @@ app.get('/posting',async(req,res)=>{
 });
 
 app.post('/write/post',(req,res)=>{
-    const {title,content} = req.body;
+    const {i,title,content} = req.body;
     const bord = req.body;
-    console.log("Writing",{title,content});
+    console.log("Writing",{i,title,content});
     db_2.insertOne(bord);
     return res.status(200).json({ message: '굿' });
 })
@@ -274,11 +276,38 @@ app.get('/note', (req,res) => {
     res.render('note')
 })
 
-app.post('/note/post',(req,res)=>{
-    console.log("제벌",req.post);
-    res.json({
-        title: req.post.title,
-        content: req.post.content,
-        path:req.post.file
-    });
+app.get('/note/post',async(req,res)=>{
+    try{
+        const posts = await db_2.find({}).sort({ createdAt: -1 }).toArray();  //db_2.find({}): MongoDB에서 모든 글 데이터를 가져옵니다.
+        res.status(200).json(posts);                                          //sort({ createdAt: -1 }):   글을 최신순으로 정렬합니다.
+    } catch (error) {
+        console.error("글 불러오기 실패:", error);
+        res.status(500).json({ message: '서버 오류가 발생했습니다.' });
+    } 
+})
+
+app.get('/countPostNumber',async(req,res)=>{
+    try{
+        const count = await db_3.find({}, { count: 1 }).toArray();   //db_2.find({}): MongoDB에서 모든 글 데이터를 가져옵니다.
+        res.status(200).json(count);
+        console.log(count);                                          //sort({ createdAt: -1 }):   글을 최신순으로 정렬합니다.
+    } catch (error) {
+        console.error("글 불러오기 실패:", error);
+        res.status(500).json({ message: '서버 오류가 발생했습니다.' });
+    } 
+})
+
+app.post('/countPostNumber/post',async(req,res)=>{
+    const {i} = req.body;
+    const count = req.body;
+
+    try{
+        console.log(count,"넣는 숫자는 이 숫자 입니다람쥐~!!!!!!!!@$!@ㄸ!@#!@!@#")
+        await db_3.insertOne(count);
+        res.status(200).json({message:"good"});
+    }
+    catch (error) {
+        console.error("에러", error);
+        res.status(500).json({ message: '서버 오류가 발생했습니다.' });
+    } 
 })
