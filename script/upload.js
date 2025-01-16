@@ -55,6 +55,13 @@ async function upload() {
     .then(response => response.json())
     .then(data => {
         i++;
+        fetch('/countPostNumber/post',{
+            method:'POST',
+            headers:{
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({i})
+        })
         console.log("더해진 값입니다 ",i);
         console.log('텍스트 데이터 등록 성공:', data);
         alert("등록 성공!");
@@ -82,6 +89,13 @@ async function upload() {
     .then(response => response.json())
     .then(data => {
         i++;
+        fetch('/countPostNumber/post',{
+            method:'POST',
+            headers:{
+                'Content-Type': 'application/json'
+            },
+            body: JSON.stringify({i})
+        })
         console.log("더해진 값입닏다 ",i);
         console.log('텍스트 데이터 등록 성공:', data);
         alert("등록 성공!");        

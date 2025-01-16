@@ -94,9 +94,9 @@ app.get('/posting',async(req,res)=>{
 });
 
 app.post('/write/post',(req,res)=>{
-    const {i,title,content} = req.body;
+    const {_id,title,content} = req.body;
     const bord = req.body;
-    console.log("Writing",{i,title,content});
+    console.log("Writing",{_id,title,content});
     db_2.insertOne(bord);
     return res.status(200).json({ message: '굿' });
 })
@@ -286,28 +286,27 @@ app.get('/note/post',async(req,res)=>{
     } 
 })
 
-app.get('/countPostNumber',async(req,res)=>{
-    try{
-        const count = await db_3.find({}, { count: 1 }).toArray();   //db_2.find({}): MongoDB에서 모든 글 데이터를 가져옵니다.
+app.get('/countPostNumber', async (req, res) => {
+    try {
+        const count = await db_3.find({}, { count: 1 })
+            .sort({ createdAt: -1 }) // 최신순 정렬
+            .limit(1)
+            .toArray();
         res.status(200).json(count);
-        console.log(count);                                          //sort({ createdAt: -1 }):   글을 최신순으로 정렬합니다.
     } catch (error) {
         console.error("글 불러오기 실패:", error);
         res.status(500).json({ message: '서버 오류가 발생했습니다.' });
-    } 
-})
-
-app.post('/countPostNumber/post',async(req,res)=>{
-    const {i} = req.body;
-    const count = req.body;
-
-    try{
-        console.log(count,"넣는 숫자는 이 숫자 입니다람쥐~!!!!!!!!@$!@ㄸ!@#!@!@#")
-        await db_3.insertOne(count);
-        res.status(200).json({message:"good"});
     }
-    catch (error) {
-        console.error("에러", error);
+});
+
+app.post('/countPostNumber/post', async (req, res) => {
+    const { i } = req.body; // `i` 값을 받음
+    try {
+        const count = { count: i, createdAt: new Date() }; // 타임스탬프 추가
+        await db_3.insertOne(count);
+        res.status(200).json({ message: "good" });
+    } catch (error) {
+        console.error("에러 발생:", error);
         res.status(500).json({ message: '서버 오류가 발생했습니다.' });
-    } 
-})
+    }
+});
