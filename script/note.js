@@ -28,10 +28,10 @@ function renderPosts(posts) {
         postElement.style.border = '1px solid'
         postElement.className = 'post';
         postElement.innerHTML = 
-            `<h3>${post.title}</h3>
-            <p>${post.content}</p>
-            <img src="${post.path}"></img>
-            `
+            `<p>${post._id}</p>
+             <p>${post.title}</p>
+             <p>${post.content}</p>
+             <img src="${post.path}"></img>`
         container.appendChild(postElement);
     });
 }

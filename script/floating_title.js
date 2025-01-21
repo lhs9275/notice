@@ -28,27 +28,25 @@ function renderPosts(posts) {
         postElement.style.border = '1px solid'
         postElement.className = 'post';
         postElement.innerHTML = 
-        `<p onclick="openpage()">${post._id}</p>
-        <p>${post.title}</p>`
+        `<h2 onclick="openpage(${post._id})">${post.title}</h2>
+         <p>${post._id}</p>`
         container.appendChild(postElement);
     });
 
 }
 
-async function openpage(id){
-    try {
-        console.log(id);
-        const response = await fetch('/note/post');
-        if (!response.ok) {
-            throw new Error('오류');
-        }
-        // JSON 데이터를 파싱
-        const post = await response.json();
-        console.log('받은 데이터:', post);
-        
-    } catch (error) {
-        console.error('오류 발생:', error);
-    }
+
+// 고유번호를 
+async function openpage(x){
+    const delivery_id = x
+    fetch('/open/note',{
+        method:'POST',
+        headers:{
+            'Content-Type': 'application/json'
+        },
+        body:JSON.stringify({delivery_id})
+    })
+
 }
 // 페이지 로드 시 데이터 가져오기
 document.addEventListener('DOMContentLoaded', floating_content);

@@ -1,4 +1,7 @@
+//보안
 require('dotenv').config();
+
+//MongoDB
 const { MongoClient } = require('mongodb');
 const uri = process.env.KEYURL;
 const client = new MongoClient(uri);
@@ -8,10 +11,6 @@ async function main() {
         // MongoDB 연결
         await client.connect();
         console.log("MongoDB에 성공적으로 연결되었습니다!");
-
-        // 데이터베이스와 컬렉션 선택
-        const database = client.db("Notice"); // 사용할 데이터베이스 이름
-        const collection = database.collection("login"); // 사용할 컬렉션 이름
     } catch (err) {
         console.error("MongoDB 연결 또는 작업 중 오류 발생:", err);
     } 
@@ -19,12 +18,11 @@ async function main() {
 
 main();
 
+let db = client.db('Notice').collection('login');     //회원 DB
+let db_2 = client.db('Notice').collection('post');    //게시판 DB
+let db_3 = client.db('Notice').collection('count');   // 게시판 일련번호 DB
 
-let db = client.db('Notice').collection('login'); //로그인 관련 
-let db_2 = client.db('Notice').collection('post');//게시판 관련
-let db_3 = client.db('Notice').collection('count'); 
-
-//  node.js 부분 
+//Node.JS
 const passport = require('passport');
 const LocalStrategy = require('passport-local').Strategy;
 const session = require('express-session');
@@ -310,3 +308,18 @@ app.post('/countPostNumber/post', async (req, res) => {
         res.status(500).json({ message: '서버 오류가 발생했습니다.' });
     }
 });
+
+app.post('/open/note',async(req,res)=>{
+    const {delivery_id} = req.body;
+    console.log("딜리버리아이디는",delivery_id);
+    try{
+        const count = { _id: delivery_id, }
+        const post = await db_2.find(count).toArray();
+        console.log("받은 포스트는",post);  //db_2.find({}): MongoDB에서 모든 글 데이터를 가져옵니다.
+        res.status(200).json(post);
+    }
+    catch (error) {
+        console.error("에러 발생:", error);
+        res.status(500).json({ message: '서버 오류가 발생했습니다.' });
+    }
+})
