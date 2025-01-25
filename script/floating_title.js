@@ -13,7 +13,7 @@ async function floating_content() {
 
         // 데이터를 렌더링
         renderPosts(posts);
-    } catch (error) {
+    } catch (error) {   
         console.error('오류 발생:', error);
     }
 }
@@ -28,8 +28,9 @@ function renderPosts(posts) {
         postElement.style.border = '1px solid'
         postElement.className = 'post';
         postElement.innerHTML = 
-        `<h2 onclick="openpage(${post._id})">${post.title}</h2>
-         <p>${post._id}</p>`
+        `<p>${post._id}</p>
+        <h2 onclick="openpage(${post._id})">${post.title}</h2>
+         `
         container.appendChild(postElement);
     });
 
@@ -38,15 +39,20 @@ function renderPosts(posts) {
 
 // 고유번호를 
 async function openpage(x){
-    const delivery_id = x
-    fetch('/open/note',{
-        method:'POST',
-        headers:{
+    const delivery_id = x;
+    // 첫 번째 fetch 요청
+    fetch('/open/note', {
+        method: 'POST',
+        headers: {
             'Content-Type': 'application/json'
         },
-        body:JSON.stringify({delivery_id})
+        body: JSON.stringify({ delivery_id })
     })
+    .then(response => response.json())
+        window.open(`/note?id=${delivery_id}`);
 
-}
+    }
+
+
 // 페이지 로드 시 데이터 가져오기
 document.addEventListener('DOMContentLoaded', floating_content);

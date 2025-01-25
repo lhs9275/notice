@@ -323,3 +323,21 @@ app.post('/open/note',async(req,res)=>{
         res.status(500).json({ message: '서버 오류가 발생했습니다.' });
     }
 })
+
+app.post('/note/post/detail',async(req,res)=>{
+    const {id} = req.body;
+
+    console.log("아이디는",id);
+
+    try{
+        const count = { _id: parseInt(id, 10) };
+        const post = await db_2.find(count).toArray();
+        console.log("디테일 게시판의 값은",post);  //db_2.find({}): MongoDB에서 모든 글 데이터를 가져옵니다.
+        res.status(200).json(post);
+    }
+    catch (error) {
+        console.error("에러 발생:", error);
+        res.status(500).json({ message: '서버 오류가 발생했습니다.' });
+    }
+})
+

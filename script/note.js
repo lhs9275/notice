@@ -1,22 +1,29 @@
 // 비동기적으로 데이터를 가져오는 함수
-async function floating_content() {
-    try {
-        // 서버에 GET 요청
-        const response = await fetch('/posting');
-        if (!response.ok) {
-            throw new Error('데이터 요청 실패');
-        }
-
-        // JSON 데이터를 파싱
-        const posts = await response.json();
-        console.log('받은 데이터:', posts);
-
-        // 데이터를 렌더링
-        renderPosts(posts);
-    } catch (error) {
-        console.error('오류 발생:', error);
-    }
+function getIdFromUrl() {
+    const urlParams = new URLSearchParams(window.location.search);
+    const id = urlParams.get('id');  // 'id' 파라미터 값을 추출
+    floating_content(id);
 }
+
+async function floating_content(id) {
+
+    console.log("파라미터값은 = ",id)
+    fetch('/note/post/detail',{
+        method: 'POST',
+        headers: {
+            'Content-Type': 'application/json'
+        },
+        body: JSON.stringify({ id })
+    }) .then(response => response.json())
+    .then(data => {
+        renderPosts(data);
+    })
+    
+
+
+
+}
+      
 
 // 데이터를 화면에 렌더링하는 함수
 function renderPosts(posts) {
@@ -37,4 +44,4 @@ function renderPosts(posts) {
 }
 
 // 페이지 로드 시 데이터 가져오기
-document.addEventListener('DOMContentLoaded', floating_content);
+document.addEventListener('DOMContentLoaded', getIdFromUrl);
