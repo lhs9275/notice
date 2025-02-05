@@ -20,6 +20,7 @@ async function floating_content() {
 
 // 데이터를 화면에 렌더링하는 함수
 function renderPosts(posts) {
+    posts.reverse();
     const container = document.getElementById('posts-container');
     container.innerHTML = ''; // 기존 내용을 비움
 

@@ -19,9 +19,6 @@ async function floating_content(id) {
         renderPosts(data);
     })
     
-
-
-
 }
       
 
